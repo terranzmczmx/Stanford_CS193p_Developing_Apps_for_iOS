@@ -8,24 +8,32 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var cardCount = 4
+    @State var cardCount = 0
+    @State var themeIndex = 0
     var emojis = ["😀", "😃", "😂", "😍", "😇", "🥸", "🥳"]
+    @State var themeEmojis = [["🚗", "🚗", "🚌", "🚌", "🏎️", "🏎️", "🚓", "🚓", "🚑", "🚑", "🚜", "🚜"],
+                       ["⚽️", "⚽️", "🏀", "🏀", "🏈", "🏈", "⚾️", "⚾️", "🏓", "🏓"],
+                       ["🐶", "🐶", "🐱", "🐱", "🐭", "🐭", "🐹", "🐹"]
+                      ]
     
     var body: some View {
         VStack {
+            Text("Memorize!")
+                .font(.largeTitle)
             ScrollView {
                 cards
             }
             Spacer()
-            cardCountAdjusters
+//            cardCountAdjusters
+            themeChoosing
         }
         .padding()
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))]) {
             ForEach(0..<cardCount, id: \.self) { index in
-                CardView(content: emojis[index])
+                CardView(content: themeEmojis[themeIndex][index])
                     .aspectRatio(2/3, contentMode: .fit)
             }
         }
@@ -58,11 +66,39 @@ struct ContentView: View {
         })
         .disabled(cardCount + offset < 0 || cardCount + offset > emojis.count)
     }
+    
+    var themeChoosing: some View {
+        HStack {
+            Spacer()
+            theme(by: 0, symbol: "car", name: "Vehicles")
+            Spacer()
+            theme(by: 1, symbol: "figure.run", name: "Sports")
+            Spacer()
+            theme(by: 2, symbol: "pawprint", name: "Animals")
+            Spacer()
+        }
+    }
+    
+    func theme(by index: Int, symbol: String, name: String) -> some View {
+        Button(action: {
+            themeIndex = index
+            cardCount = themeEmojis[themeIndex].count
+            themeEmojis[themeIndex].shuffle()
+        }, label: {
+            VStack {
+                Image(systemName: symbol)
+//                    .font(.headline)
+                    .imageScale(.large)
+                Text(name)
+                    .font(.body)
+            }
+        })
+    }
 }
 
 struct CardView: View {
     var content: String
-    @State var isFaceUp = true
+    @State var isFaceUp = false
     
     var body: some View {
         ZStack {
