@@ -11,10 +11,10 @@ import SwiftUI
 import Combine
 
 class EmojiMemoryGame: ObservableObject {
-    private static let emojis = ["😀", "😃", "😂", "😍", "😇", "🥸", "🥳"]
+    private static let emojis = ["😀", "😃", "😂", "😍", "😇", "🥸", "🥳", "⚽️", "🏀", "🏈"]
     
     private static func createMemoryGame() -> MemoryGame<String> {
-        return MemoryGame(numberOfPairsOfCards: 16) { index in
+        return MemoryGame(numberOfPairsOfCards: 7) { index in
             if emojis.indices.contains(index) {
                 return emojis[index]
             } else {
@@ -26,7 +26,7 @@ class EmojiMemoryGame: ObservableObject {
 //    var objectWillChange = ObservableObjectPublisher()
     
     @Published var model: MemoryGame<String> = MemoryGame(
-        numberOfPairsOfCards: 16) { index in
+        numberOfPairsOfCards: 7) { index in
             if emojis.indices.contains(index) {
                 return emojis[index]
             } else {
